@@ -20,21 +20,21 @@ world.printRooms()
 player = Player("Name", world.startingRoom)
 
 
-class Queue():
-    def __init__(self):
-        self.queue = []
+# class Queue():
+#     def __init__(self):
+#         self.queue = []
 
-    def enqueue(self, value):
-        self.queue.append(value)
+#     def enqueue(self, value):
+#         self.queue.append(value)
 
-    def dequeue(self):
-        if self.size() > 0:
-            return self.queue.pop(0)
-        else:
-            return None
+#     def dequeue(self):
+#         if self.size() > 0:
+#             return self.queue.pop(0)
+#         else:
+#             return None
 
-    def size(self):
-        return len(self.queue)
+#     def size(self):
+#         return len(self.queue)
 
 
 class Stack():
@@ -55,7 +55,36 @@ class Stack():
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
+
+
+traversalPath = list()
+reversed_path = list()
+rooms = dict()
+rooms_dict = dict()
+opposite_direction = dict(n="s",s="n",e="w",w="e")
+
+
+rooms[0] = player.currentRoom.getExits()
+print(f"this is ************ {rooms}")
+rooms_dict[0] = player.currentRoom.getExits()
+while len(rooms) < len(roomGraph) - 1:
+            if player.currentRoom.id not in rooms:
+                # print(f"this is ************ {rooms}")
+                rooms[player.currentRoom.id] = player.currentRoom.getExits()
+                rooms_dict[player.currentRoom.id] = player.currentRoom.getExits(
+                )
+                last_direction = reversed_path[-1]
+                rooms_dict[player.currentRoom.id].remove(last_direction)
+                # print(f"this is the length {len(rooms)}")
+            while len(rooms_dict[player.currentRoom.id]) <= 0:
+                reversed = reversed_path.pop()
+                # print(f"this is reverse => {reversed}")
+                traversalPath.append(reversed)
+                player.travel(reversed)
+            exit = rooms_dict[player.currentRoom.id].pop(0)
+            traversalPath.append(exit)
+            reversed_path.append(opposite_direction[exit])
+            player.travel(exit)
 
 
 # TRAVERSAL TEST
@@ -74,9 +103,9 @@ else:
 
 
 
-#######
+######
 # UNCOMMENT TO WALK AROUND
-#######
+######
 # player.currentRoom.printRoomDescription(player)
 # while True:
 #     cmds = input("-> ").lower().split(" ")
